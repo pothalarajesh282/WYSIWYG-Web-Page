@@ -6,7 +6,7 @@ import TextNode from '../../components/nodes/TextNode.jsx'
 import ImageNode from '../../components/nodes/ImageNode.jsx'
 import ButtonNode from '../../components/nodes/ButtonNode.jsx'
 
-export default function CanvasNode({ node, selectedId, setSelectedId, moveNode, updateNodeProps, preview, theme, editingId, setEditingId }) {
+export default function CanvasNode({ node, selectedId, setSelectedId, moveNode, updateNodeProps, removeNode, preview, theme, editingId, setEditingId }) {
   const ref = React.useRef(null)
   const [{ isDragging }, drag] = useDrag(() => ({ type: ItemTypes.NODE, item: { id: node.id }, collect: (m)=>({ isDragging: m.isDragging() }), canDrag: !preview }), [node.id, preview])
   const [, drop] = useDrop(() => ({ accept: ItemTypes.NODE, hover: (item, monitor) => { if (!ref.current) return; const delta = monitor.getDifferenceFromInitialOffset(); if (!delta) return; const newX = Math.round(node.x + delta.x); const newY = Math.round(node.y + delta.y); moveNode(node.id, newX, newY); } }), [node, moveNode])
@@ -23,6 +23,14 @@ export default function CanvasNode({ node, selectedId, setSelectedId, moveNode, 
         {node.type === 'text' && <TextNode node={node} {...common} onRequestClose={() => setEditingId(null)} />}
         {node.type === 'image' && <ImageNode node={node} {...common} />}
         {node.type === 'button' && <ButtonNode node={node} {...common} />}
+        {!preview && (
+          <button
+            onClick={() => removeNode(node.id)}
+            className="absolute top-1 right-1 bg-rose-600 text-white text-xs px-2 rounded"
+          >
+            ✕
+          </button>
+        )}
       </NodeChrome>
     </div>
   )

@@ -23,7 +23,6 @@ export default function WysiwygPageBuilder() {
   }, [])
 
   useEffect(() => {
-    // initial snapshot
     pushHistory({ nodes: JSON.parse(JSON.stringify(nodes)), canvasBg })
   }, [])
 
@@ -47,6 +46,12 @@ export default function WysiwygPageBuilder() {
     pushHistory({ nodes: JSON.parse(JSON.stringify(nodes)), canvasBg })
     setNodes((prev) => prev.map((n) => (n.id === id ? { ...n, props } : n)))
   }, [nodes, canvasBg, pushHistory])
+
+  const removeNode = useCallback((id) => {
+    pushHistory({ nodes: JSON.parse(JSON.stringify(nodes)), canvasBg })
+    setNodes((prev) => prev.filter((n) => n.id !== id))
+    if (selectedId === id) setSelectedId(null)
+  }, [nodes, canvasBg, pushHistory, selectedId])
 
   const undo = () => {
     if (history.length > 0) {
@@ -106,7 +111,7 @@ export default function WysiwygPageBuilder() {
 
         <div className='grid h-[calc(100vh-56px)] grid-cols-12 gap-4 p-4'>
           <Toolbar preview={preview} theme={theme} />
-          <Canvas nodes={nodes} addNodeAt={addNodeAt} moveNode={moveNode} updateNodeProps={updateNodeProps} selectedId={selectedId} setSelectedId={setSelectedId} preview={preview} canvasBg={canvasBg} theme={theme} editingId={editingId} setEditingId={setEditingId} />
+          <Canvas nodes={nodes} addNodeAt={addNodeAt} moveNode={moveNode} updateNodeProps={updateNodeProps} removeNode={removeNode} selectedId={selectedId} setSelectedId={setSelectedId} preview={preview} canvasBg={canvasBg} theme={theme} editingId={editingId} setEditingId={setEditingId} />
           <Inspector selectedNode={selectedNode} updateNodeProps={(props) => selectedNode && updateNodeProps(selectedNode.id, props)} canvasBg={canvasBg} setCanvasBg={setCanvasBg} preview={preview} theme={theme} />
         </div>
 

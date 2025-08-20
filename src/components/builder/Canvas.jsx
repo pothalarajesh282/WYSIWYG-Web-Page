@@ -8,6 +8,7 @@ export default function Canvas({
   addNodeAt,
   moveNode,
   updateNodeProps,
+  removeNode,
   selectedId,
   setSelectedId,
   preview,
@@ -64,11 +65,11 @@ export default function Canvas({
             setSelectedId={setSelectedId}
             moveNode={moveNode}
             updateNodeProps={updateNodeProps}
+            removeNode={removeNode}
             preview={preview}
             theme={theme}
             editingId={editingId}
             setEditingId={setEditingId}
-            
           />
         ))}
       </div>
